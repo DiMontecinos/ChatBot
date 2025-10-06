@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpdesk con Chatbot</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Implementos</div>
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Servicios</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Centro de Soporte - Helpdesk con Chatbot</h1>
+        <p>Optimiza la atención al usuario con un asistente inteligente 24/7.</p>
+        <a href="#" class="btn">Ver más</a>
+    </section>
+
+    <!-- Botón flotante del chatbot -->
+    <div class="chatbot-button" onclick="toggleChatbot()">
+        <img src="{% static 'img/chatbot-icon.png' %}" alt="Chatbot">
+    </div>
+
+    <!-- Ventana del chatbot (oculta por defecto) -->
+    <div class="chatbot-popup" id="chatbot">
+        <div class="chatbot-header">
+            <h3>Soporte Virtual</h3>
+            <button onclick="toggleChatbot()">✖</button>
+        </div>
+        <iframe
+            allow="microphone;"
+            width="100%"
+            height="400"
+            src="https://console.dialogflow.com/api-client/demo/embedded/tu-chatbot-id">
+        </iframe>
+    </div>
+
+    <footer>
+        <p>© 2025 Implementos - Proyecto Helpdesk con Chatbot</p>
+    </footer>
+
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.style.display = chatbot.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+
+</body>
+</html>
