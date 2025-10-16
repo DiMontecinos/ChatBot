@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load static %}
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,28 +29,59 @@
         <img src="{% static 'img/chatbot-icon.png' %}" alt="Chatbot">
     </div>
 
-    <!-- Ventana del chatbot (oculta por defecto) -->
+    <!-- Ventana del chatbot -->
     <div class="chatbot-popup" id="chatbot">
         <div class="chatbot-header">
             <h3>Soporte Virtual</h3>
             <button onclick="toggleChatbot()">✖</button>
         </div>
-        <iframe
-            allow="microphone;"
-            width="100%"
-            height="400"
-            src="https://console.dialogflow.com/api-client/demo/embedded/tu-chatbot-id">
-        </iframe>
+
+        <div class="chatbot-body" id="chatbot-body">
+            <div class="message bot">👋 ¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+
+        <div class="chatbot-input">
+            <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
     </div>
 
     <footer>
-        <p>© 2025 Implementos - Proyecto Helpdesk con Chatbot</p>
+        <p>© 2025 Implementos</p>
     </footer>
 
     <script>
+        const chatbot = document.getElementById('chatbot');
+        const chatbotBody = document.getElementById('chatbot-body');
+        const userInput = document.getElementById('userInput');
+
         function toggleChatbot() {
-            const chatbot = document.getElementById('chatbot');
             chatbot.style.display = chatbot.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            appendMessage(message, 'user');
+            userInput.value = '';
+
+            const res = await fetch('/webhook/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await res.json();
+            appendMessage(data.response, 'bot');
+        }
+
+        function appendMessage(text, sender) {
+            const msg = document.createElement('div');
+            msg.classList.add('message', sender);
+            msg.textContent = text;
+            chatbotBody.appendChild(msg);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
         }
     </script>
 
