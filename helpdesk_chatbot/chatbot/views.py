@@ -2,14 +2,12 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
-from openai import OpenAI   # ✅ Import correcto para la nueva versión
+import google.generativeai as genai
 import os, json
 
-# se supone que carga key
-load_dotenv("key.env")
-
-# crea cliente 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Cargar clave API 
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "key.env"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 def index(request):
     return render(request, "index.html")
@@ -22,18 +20,15 @@ def webhook(request):
             message = body.get("message", "")
 
             if not message:
-                return JsonResponse({"response": "No recibí ningún mensaje 😅"})
+                return JsonResponse({"response": "No recibí ningún mensaje "})
 
-            # envia mensaje
-            completion = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "Eres un asistente virtual de soporte técnico para la empresa Implementos."},
-                    {"role": "user", "content": message}
-                ]
+            model = genai.GenerativeModel("models/gemini-2.5-flash")
+            response = model.generate_content(
+                f"Eres un asistente virtual de soporte técnico para la empresa Implementos. "
+                f"Responde de forma amable, clara y profesional. Pregunta del usuario: {message}"
             )
 
-            response_text = completion.choices[0].message.content.strip()
+            response_text = response.text if hasattr(response, "text") else "No entendí tu mensaje 🤖"
             return JsonResponse({"response": response_text})
 
         except Exception as e:

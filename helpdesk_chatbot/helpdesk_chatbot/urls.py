@@ -4,5 +4,6 @@ from chatbot import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('chatbot.urls')),
+    path('', views.index, name='index'),
+    path('webhook/', views.webhook, name='webhook'),
 ]
