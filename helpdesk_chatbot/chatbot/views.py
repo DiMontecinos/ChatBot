@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 import google.generativeai as genai
 import os, json
+from .models import Ticket
 
 # Cargar clave API 
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "key.env"))
@@ -20,16 +21,27 @@ def webhook(request):
             message = body.get("message", "")
 
             if not message:
-                return JsonResponse({"response": "No recibí ningún mensaje "})
+                return JsonResponse({"response": "No recibí ningún mensaje 😅"})
 
-            model = genai.GenerativeModel("models/gemini-2.5-flash")
+            # Procesar respuesta con Gemini
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content(
-                f"Eres un asistente virtual de soporte técnico para la empresa Implementos. "
-                f"Responde de forma amable, clara y profesional. Pregunta del usuario: {message}"
+                f"Eres un asistente de soporte técnico. Un usuario escribió: {message}. "
+                "Genera una breve respuesta amable y profesional."
             )
 
-            response_text = response.text if hasattr(response, "text") else "No entendí tu mensaje 🤖"
-            return JsonResponse({"response": response_text})
+            respuesta_chatbot = response.text.strip()
+
+            # aqui guarda el ticket
+            Ticket.objects.create(
+                nombre_usuario="Usuario anónimo",
+                correo="sin_correo@implementos.cl",
+                asunto="Consulta general desde chatbot",
+                descripcion=message,
+                estado="Pendiente"
+            )
+
+            return JsonResponse({"response": respuesta_chatbot})
 
         except Exception as e:
             print("Error en webhook:", e)
