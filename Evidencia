@@ -4,14 +4,23 @@ Thomas Astete jefe de proeyecto.
 Juan Sierra QA
 Diego Montecinos Desarrollador
 
-Primer Commit:
+Primer avance:
 Diego Montecino y Juan Sierra desarrollo de la pagina base
 Thomas Astete avance de informe y requerimientos
 
-Segundo commit:
+Segundo avance:
 Diego Montecinos desarrollo de chatbot
 Juan Sierra y Thomas Astete avance de informe y presentacion
 
-Tercer commit:
+Tercer avance:
 Diego Montecinos desarrollo de chatbot funcional
 Juan Sierra y Thomas Astete terminan la presentacion, Juan Sierra ayuda a testear para que el codigo funcione bien
+
+Cuarto avance:
+Diego Montecinos integra base de datos
+
+Quinto avance:
+Diego Montecinos y Juan Sierra prueban la base de datos
+
+Sexto avance:
+Diego Montecinos realiza la implementacion del proeycto al servidor host aws ec2s
